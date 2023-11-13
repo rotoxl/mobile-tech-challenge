@@ -10,13 +10,15 @@ import Row from '../../../components/Row';
 import TextBody from '../../../components/TextBody';
 import { FormattedDate } from 'react-intl';
 import { Alert } from 'react-native';
-import { bottomSheetModalRef } from './TournamentModal';
+import { bottomSheetModalRef } from '../../../components/Modal';
 
 type TournamentDetailProps = {
   tournament: Tournament;
 };
 
-export const TournamentDetail = ({ tournament }: TournamentDetailProps) => {
+export const TournamentDetailModal = ({
+  tournament,
+}: TournamentDetailProps) => {
   const handleEdit = useCallback(() => {}, []);
   const handleDelete = useCallback(() => {
     const performDelete = () => {

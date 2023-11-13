@@ -1,20 +1,14 @@
-# Developer notes
+# Developer notes
 
-- I chose to use @reduxjs/toolkit as its pretty much the new standard
+- I chose to use `@reduxjs/toolkit`` as its pretty much the new standard
 - It's the first time I use `styled-components`, I guess my objects can probably be organized in a better way
-- I used `@gorhom/bottom-sheet` for the modal, `react-native-vector-icons` and `react-intl` to process the date
+- I used some libraries. This might be a bit overkill for such an small app, but I usually choose setup apps thinking on the long run
+  - `@gorhom/bottom-sheet` for the modal,
+  - `react-native-vector-icons` for the icons
+  - `react-intl` to process the date
+  - `zod` for data validation of the form (I usually combine it with `react-hook-form`)
 
-#
-
-#
-
-#
-
-#
-
-#
-
-#
+---
 
 # Mobile Coding Challenge
 

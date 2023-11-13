@@ -1,4 +1,5 @@
 import React, {
+  ReactNode,
   createRef,
   useImperativeHandle,
   useMemo,
@@ -7,20 +8,17 @@ import React, {
 } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import { Tournament } from '../../../features/tournament/tournamentSlice';
-import theme from '../../../theme';
-
-import { TournamentDetail } from './TournamentDetail';
+import theme from '../theme';
 
 export type TournamentModalHandler = {
-  open: (tournament: Tournament) => void;
+  open: (content: ReactNode) => void;
   close: () => void;
 };
 
 export const bottomSheetModalRef = createRef<TournamentModalHandler>();
 
 export const TournamentModal = () => {
-  const [tournament, setTournament] = useState<Tournament | null>(null);
+  const [content, setContent] = useState<ReactNode>(null);
   const internalRef = useRef<BottomSheetModal>(null);
 
   const modalSnapPoints = useMemo(() => ['65%'], []);
@@ -28,8 +26,8 @@ export const TournamentModal = () => {
   useImperativeHandle(
     bottomSheetModalRef,
     () => ({
-      open: (activeTournament: Tournament) => {
-        setTournament(activeTournament);
+      open: (modalContent: ReactNode) => {
+        setContent(modalContent);
         internalRef.current?.present?.();
       },
       close: () => {
@@ -46,7 +44,7 @@ export const TournamentModal = () => {
       snapPoints={modalSnapPoints}
       backgroundStyle={{ backgroundColor: theme.palette.background.base }}
     >
-      {tournament ? <TournamentDetail tournament={tournament} /> : <></>}
+      {content ?? <></>}
     </BottomSheetModal>
   );
 };

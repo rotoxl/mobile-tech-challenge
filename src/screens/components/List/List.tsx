@@ -128,9 +128,11 @@ export const List = ({
   }, [hasMoreResults, isLoadingMore, loadNextPage]);
 
   useEffect(() => {
-    setRefreshing(false);
-    setLoadingMore(false);
-  }, [pageNumber]);
+    if (tournamentStatus === 'succeeded') {
+      setRefreshing(false);
+      setLoadingMore(false);
+    }
+  }, [pageNumber, tournamentStatus]);
 
   if (isRefreshing || isLoadingMore || tournamentStatus === 'succeeded') {
     if (tournaments.length > 0) {
@@ -144,13 +146,21 @@ export const List = ({
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={handleRefresh}
+              tintColor={theme.palette.attention.light}
             />
           }
           showsVerticalScrollIndicator={false}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.1}
           ListFooterComponent={
-            isLoadingMore ? <ActivityIndicator size="large" /> : <></>
+            isLoadingMore ? (
+              <ActivityIndicator
+                size="large"
+                color={theme.palette.attention.light}
+              />
+            ) : (
+              <></>
+            )
           }
         />
       );

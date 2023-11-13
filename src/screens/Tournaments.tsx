@@ -1,19 +1,21 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { List } from './components/List/List';
+import { CreateTournamentModal } from './components/Modal/CreateTournamentModal';
+import { TournamentDetailModal } from './components/Modal/TournamentDetailModal';
+import { SearchBox } from './components/SearchBox/SearchBox';
 import Container from '../components/Container';
+import FAB from '../components/FAB';
 import H4 from '../components/H4';
+import { TournamentModal, bottomSheetModalRef } from '../components/Modal';
+import RootContainer from '../components/RootContainer';
 import {
   Tournament,
   fetchTournaments,
 } from '../features/tournament/tournamentSlice';
-
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { List } from './components/List/List';
-import RootContainer from '../components/RootContainer';
-import { SearchBox } from './components/SearchBox/SearchBox';
-import {
-  TournamentModal,
-  bottomSheetModalRef,
-} from './components/Modal/TournamentModal';
+import theme from '../theme';
 
 const Tournaments = () => {
   const [query, setQuery] = useState<string>('');
@@ -23,6 +25,7 @@ const Tournaments = () => {
   const tournamentPage = useAppSelector((state) => state.tournaments.page);
 
   const refetchData = useCallback(() => {
+    console.log('>> refetchData', { pageNumber: 1, query });
     dispatch(fetchTournaments({ pageNumber: 1, query }));
   }, [dispatch, query]);
 
@@ -46,7 +49,13 @@ const Tournaments = () => {
   }, [tournamentStatus]);
 
   const showSheet = useCallback((tournament: Tournament) => {
-    bottomSheetModalRef.current?.open(tournament);
+    bottomSheetModalRef.current?.open(
+      <TournamentDetailModal tournament={tournament} />
+    );
+  }, []);
+
+  const handleCreateTournament = useCallback(async () => {
+    bottomSheetModalRef.current?.open(<CreateTournamentModal />);
   }, []);
 
   return (
@@ -63,6 +72,10 @@ const Tournaments = () => {
         </Container>
       </RootContainer>
       <TournamentModal />
+
+      <FAB onPress={handleCreateTournament}>
+        <MCIcon name="plus" size={30} color={theme.palette.text.primary} />
+      </FAB>
     </>
   );
 };
