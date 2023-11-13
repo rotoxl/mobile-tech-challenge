@@ -1,3 +1,11 @@
+export enum Spacing {
+  none = 0,
+  s = 1,
+  m = 2,
+  l = 4,
+  xl = 8,
+}
+
 const theme = {
   palette: {
     primary: {
@@ -23,9 +31,10 @@ const theme = {
     },
     text: {
       primary: '#FFF',
+      secondary: '#484848',
     },
   },
-  spacing: (multiplier = 1) => `${4 * multiplier}px`,
+  spacing: (multiplier: Spacing = 1) => `${4 * multiplier}px`,
   borderRadius: '4px',
   typography: {
     h1: {

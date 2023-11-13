@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import tournaments from './tournaments';
+import tournamentsReducer from '../features/tournament/tournamentSlice';
 
 const rootReducer = combineReducers({
-  tournaments,
+  tournaments: tournamentsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

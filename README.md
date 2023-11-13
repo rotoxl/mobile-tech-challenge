@@ -1,3 +1,21 @@
+# Developer notes
+
+- I chose to use @reduxjs/toolkit as its pretty much the new standard
+- It's the first time I use `styled-components`, I guess my objects can probably be organized in a better way
+- I used `@gorhom/bottom-sheet` for the modal, `react-native-vector-icons` and `react-intl` to process the date
+
+#
+
+#
+
+#
+
+#
+
+#
+
+#
+
 # Mobile Coding Challenge
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli) and has addtional libraries included:

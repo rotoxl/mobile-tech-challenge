@@ -6,6 +6,7 @@ const Input = styled.TextInput`
   padding: ${theme.spacing(2)};
   border: none;
   color: ${theme.palette.text.primary};
+  flex: 1;
 `;
 
 export default Input;
