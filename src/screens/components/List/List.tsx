@@ -9,7 +9,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useAppSelector } from '../../../store/hooks';
-import theme, { Spacing } from '../../../theme';
+import theme, { Spacing, getBreakpointKey, screenWidth } from '../../../theme';
 import Button from '../../../components/Button';
 import { ListItem } from './ListItem';
 import H6 from '../../../components/H6';
@@ -47,7 +47,7 @@ export const List = ({
   const tournaments = useAppSelector((state) => state.tournaments.list);
   const pageNumber = useAppSelector((state) => state.tournaments.page);
   const hasMoreResults = useAppSelector(
-    (state) => state.tournaments.hasMoreResults
+    (state) => state.tournaments.hasMoreResults,
   );
   const tournamentStatus = useAppSelector((state) => state.tournaments.status);
 
@@ -68,7 +68,7 @@ export const List = ({
         </SecondaryText>
       </ContainerCenterVertical>
     ),
-    []
+    [],
   );
   const LoadingState = useCallback(
     () => (
@@ -78,7 +78,7 @@ export const List = ({
       </ContainerCenterVertical>
     ),
 
-    []
+    [],
   );
   const ErrorState = useCallback(
     () => (
@@ -94,25 +94,21 @@ export const List = ({
         <Button onPress={refetchData}>Retry</Button>
       </ContainerCenterVertical>
     ),
-    [refetchData]
+    [refetchData],
   );
 
   const handlePressItem = useCallback(
     (item: Tournament) => () => {
       handleSelectItem(item);
     },
-    [handleSelectItem]
+    [handleSelectItem],
   );
 
   const renderTournamentRow = useCallback(
-    ({ item, index }: ListRenderItemInfo<Tournament>) => (
-      <ListItem
-        tournament={item}
-        index={index}
-        onPress={handlePressItem(item)}
-      />
+    ({ item }: ListRenderItemInfo<Tournament>) => (
+      <ListItem tournament={item} onPress={handlePressItem(item)} />
     ),
-    [handlePressItem]
+    [handlePressItem],
   );
 
   const handleRefresh = useCallback(() => {
@@ -126,6 +122,17 @@ export const List = ({
       loadNextPage();
     }
   }, [hasMoreResults, isLoadingMore, loadNextPage]);
+
+  const getNumColumnsForBreakpoint = useCallback(() => {
+    const screenSize = getBreakpointKey(screenWidth);
+    return {
+      s: 2,
+      m: 3,
+      l: 4,
+      xl: 6,
+      xxl: 6,
+    }[screenSize];
+  }, [screenWidth]);
 
   useEffect(() => {
     if (tournamentStatus === 'succeeded') {
@@ -141,7 +148,7 @@ export const List = ({
           data={tournaments}
           renderItem={renderTournamentRow}
           keyExtractor={(item) => item.id}
-          numColumns={2}
+          numColumns={getNumColumnsForBreakpoint()}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}

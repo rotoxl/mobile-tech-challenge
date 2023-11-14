@@ -1,3 +1,5 @@
+import { Dimensions } from 'react-native';
+
 export enum Spacing {
   none = 0,
   s = 1,
@@ -33,6 +35,7 @@ const theme = {
       primary: '#FFF',
       secondary: '#484848',
     },
+    backdrop: 'rgba(0, 0, 0, 0.7)',
   },
   spacing: (multiplier: Spacing = 1) => `${4 * multiplier}px`,
   borderRadius: '4px',
@@ -79,5 +82,30 @@ const theme = {
     xxl: '1620px',
   },
 };
+
+export const getBreakpointKey = (screenWidth: number) => {
+  const entries = Object.entries(theme.breakpoints);
+
+  const breakpoints = entries.map((entry) => {
+    const key = entry[0];
+    const value = Number(entry[1].replace('px', ''));
+    return { key, value };
+  });
+
+  const breakpoint = breakpoints
+    .map((b, index) => {
+      if (screenWidth <= b.value) {
+        return breakpoints[index > 0 ? index - 1 : index];
+      }
+      return undefined;
+    })
+    .filter((b) => b !== undefined)[0];
+
+  return breakpoint ? breakpoint.key : 'xxl';
+};
+
+const { width, height } = Dimensions.get('window');
+export const screenWidth = width;
+export const screenHeight = height;
 
 export default theme;

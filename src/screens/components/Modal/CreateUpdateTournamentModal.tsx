@@ -6,7 +6,10 @@ import Button from '../../../components/Button';
 import H6 from '../../../components/H6';
 import Input from '../../../components/Input';
 import { bottomSheetModalRef } from '../../../components/Modal';
-import { createTournament } from '../../../features/tournament/tournamentSlice';
+import {
+  createTournament,
+  updateTournament,
+} from '../../../features/tournament/tournamentSlice';
 import { useAppDispatch } from '../../../store/hooks';
 import theme, { Spacing } from '../../../theme';
 import { ActivityIndicator } from 'react-native';
@@ -24,8 +27,20 @@ const FormValidator = z.object({
     ),
 });
 
-export const CreateTournamentModal = () => {
-  const [inputValue, setInputValue] = React.useState<string>('');
+type Props =
+  | {
+      operation: 'create';
+      name?: never;
+      id?: never;
+    }
+  | {
+      operation: 'update';
+      name: string;
+      id: string;
+    };
+
+export const CreateUpdateTournamentModal = ({ name, id, operation }: Props) => {
+  const [inputValue, setInputValue] = React.useState<string>(name ?? '');
   const [errorDescription, setErrorDescription] = React.useState<
     string | undefined
   >();
@@ -45,11 +60,15 @@ export const CreateTournamentModal = () => {
     return validationResult.success;
   }, [inputValue]);
 
-  const handleCreate = useCallback(async () => {
+  const handleSaveData = useCallback(async () => {
     if (isInputValid()) {
       setLoading(true);
       try {
-        await dispatch(createTournament(inputValue)).unwrap();
+        if (operation === 'update') {
+          await dispatch(updateTournament({ id, name: inputValue })).unwrap();
+        } else {
+          await dispatch(createTournament(inputValue)).unwrap();
+        }
         setLoading(false);
         bottomSheetModalRef.current?.close();
       } catch (e: any) {
@@ -58,16 +77,17 @@ export const CreateTournamentModal = () => {
         setLoading(false);
       }
     }
-  }, [dispatch, inputValue, isInputValid]);
+  }, [dispatch, id, inputValue, isInputValid, operation]);
 
   const handleInputChange = useCallback((value: string) => {
     setInputValue(value);
     setErrorDescription(undefined);
   }, []);
 
+  const isCreate = operation === 'create';
   return (
     <ModalContainer>
-      <H6>Create Tournament</H6>
+      <H6>{isCreate ? 'Create Tournament' : 'Edit Tournament'}</H6>
 
       <Container>
         <Input
@@ -77,6 +97,7 @@ export const CreateTournamentModal = () => {
           selectionColor={theme.palette.text.primary}
           cursorColor={theme.palette.text.primary}
           autoFocus
+          defaultValue={inputValue}
         />
       </Container>
       <ErrorDescription>{errorDescription ?? ' '}</ErrorDescription>
@@ -84,7 +105,7 @@ export const CreateTournamentModal = () => {
       {loading ? (
         <ActivityIndicator size="small" color={theme.palette.secondary.light} />
       ) : (
-        <Button onPress={handleCreate}>Create</Button>
+        <Button onPress={handleSaveData}>Create</Button>
       )}
     </ModalContainer>
   );

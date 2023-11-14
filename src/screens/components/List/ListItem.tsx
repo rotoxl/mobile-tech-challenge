@@ -6,16 +6,14 @@ import theme, { Spacing } from '../../../theme';
 import styled from 'styled-components/native';
 
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import TextBody from '../../../components/TextBody';
 
 type ListItemProps = {
   tournament: Tournament;
-  index: number;
   onPress: () => void;
 };
 
-export const ListItem = ({ tournament, index, onPress }: ListItemProps) => {
-  const isEven = index % 2 === 0;
-
+export const ListItem = ({ tournament, onPress }: ListItemProps) => {
   const content = (
     <Pressable onPress={onPress}>
       <>
@@ -27,31 +25,23 @@ export const ListItem = ({ tournament, index, onPress }: ListItemProps) => {
           />
         </Avatar>
         <TitleContainer>
-          <H6 numberOfLines={2}>{tournament.game}</H6>
+          <TextBody numberOfLines={1}>{tournament.game}</TextBody>
+          <H6 numberOfLines={2}>{tournament.name}</H6>
         </TitleContainer>
       </>
     </Pressable>
   );
 
-  if (isEven) {
-    return <ListItemContainerEven>{content}</ListItemContainerEven>;
-  } else {
-    return <ListItemContainerOdd>{content}</ListItemContainerOdd>;
-  }
+  return <ListItemContainer>{content}</ListItemContainer>;
 };
 
-const ListItemContainerOdd = styled.View`
-  margin-left: ${theme.spacing(Spacing.s)};
+const ListItemContainer = styled.View`
+  margin-horizontal: ${theme.spacing(Spacing.s / 2)};
   margin-bottom: ${theme.spacing(Spacing.m)};
   padding: ${theme.spacing(Spacing.s)};
   background: ${theme.palette.background.alt1};
-  border-radius: 4px;
+  border-radius: ${theme.borderRadius};
   flex: 1;
-`;
-
-const ListItemContainerEven = styled(ListItemContainerOdd)`
-  margin-left: 0px;
-  margin-right: ${theme.spacing(Spacing.s)};
 `;
 
 const Avatar = styled.View`

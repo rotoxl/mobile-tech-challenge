@@ -1,14 +1,17 @@
 import React, {
   ReactNode,
   createRef,
+  useCallback,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 
-import theme from '../theme';
+import theme, { getBreakpointKey, screenWidth } from '../theme';
+import { StyleSheet, View } from 'react-native';
+import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 
 export type TournamentModalHandler = {
   open: (content: ReactNode) => void;
@@ -34,7 +37,34 @@ export const TournamentModal = () => {
         internalRef.current?.close?.();
       },
     }),
-    []
+    [],
+  );
+
+  const screenSize = getBreakpointKey(screenWidth);
+  const modalWidth =
+    {
+      s: screenWidth,
+      m: screenWidth,
+      l: screenWidth * 0.5,
+      xl: screenWidth * 0.5,
+      xxl: screenWidth * 0.5,
+    }[screenSize] ?? screenWidth;
+
+  const renderBackdrop = useCallback(
+    (props: BottomSheetDefaultBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        opacity={0.5}
+        enableTouchThrough={false}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        style={[
+          { backgroundColor: theme.palette.backdrop },
+          StyleSheet.absoluteFillObject,
+        ]}
+      />
+    ),
+    [],
   );
 
   return (
@@ -43,6 +73,11 @@ export const TournamentModal = () => {
       index={0}
       snapPoints={modalSnapPoints}
       backgroundStyle={{ backgroundColor: theme.palette.background.base }}
+      backdropComponent={renderBackdrop}
+      style={{
+        width: modalWidth,
+        marginHorizontal: (screenWidth - modalWidth) / 2,
+      }}
     >
       {content ?? <></>}
     </BottomSheetModal>

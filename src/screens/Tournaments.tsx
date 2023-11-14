@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { List } from './components/List/List';
-import { CreateTournamentModal } from './components/Modal/CreateTournamentModal';
+import { CreateUpdateTournamentModal } from './components/Modal/CreateUpdateTournamentModal';
 import { TournamentDetailModal } from './components/Modal/TournamentDetailModal';
 import { SearchBox } from './components/SearchBox/SearchBox';
 import Container from '../components/Container';
@@ -25,7 +25,6 @@ const Tournaments = () => {
   const tournamentPage = useAppSelector((state) => state.tournaments.page);
 
   const refetchData = useCallback(() => {
-    console.log('>> refetchData', { pageNumber: 1, query });
     dispatch(fetchTournaments({ pageNumber: 1, query }));
   }, [dispatch, query]);
 
@@ -38,7 +37,7 @@ const Tournaments = () => {
       setQuery(value);
       dispatch(fetchTournaments({ pageNumber: 1, query: value }));
     },
-    [dispatch]
+    [dispatch],
   );
 
   useEffect(() => {
@@ -50,12 +49,14 @@ const Tournaments = () => {
 
   const showSheet = useCallback((tournament: Tournament) => {
     bottomSheetModalRef.current?.open(
-      <TournamentDetailModal tournament={tournament} />
+      <TournamentDetailModal tournament={tournament} />,
     );
   }, []);
 
   const handleCreateTournament = useCallback(async () => {
-    bottomSheetModalRef.current?.open(<CreateTournamentModal />);
+    bottomSheetModalRef.current?.open(
+      <CreateUpdateTournamentModal operation="create" />,
+    );
   }, []);
 
   return (

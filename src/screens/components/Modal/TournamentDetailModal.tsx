@@ -1,6 +1,9 @@
 import React, { useCallback } from 'react';
 
-import { Tournament } from '../../../features/tournament/tournamentSlice';
+import {
+  Tournament,
+  deleteTournament,
+} from '../../../features/tournament/tournamentSlice';
 import theme, { Spacing } from '../../../theme';
 
 import styled from 'styled-components/native';
@@ -9,8 +12,10 @@ import H4 from '../../../components/H4';
 import Row from '../../../components/Row';
 import TextBody from '../../../components/TextBody';
 import { FormattedDate } from 'react-intl';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { bottomSheetModalRef } from '../../../components/Modal';
+import { useAppDispatch } from '../../../store/hooks';
+import { CreateUpdateTournamentModal } from './CreateUpdateTournamentModal';
 
 type TournamentDetailProps = {
   tournament: Tournament;
@@ -19,9 +24,22 @@ type TournamentDetailProps = {
 export const TournamentDetailModal = ({
   tournament,
 }: TournamentDetailProps) => {
-  const handleEdit = useCallback(() => {}, []);
+  const dispatch = useAppDispatch();
+
+  const handleEdit = useCallback(() => {
+    // bottomSheetModalRef.current?.close();
+    bottomSheetModalRef.current?.open(
+      <CreateUpdateTournamentModal
+        operation="update"
+        name={tournament.name}
+        id={tournament.id}
+      />,
+    );
+  }, [tournament.id, tournament.name]);
+
   const handleDelete = useCallback(() => {
     const performDelete = () => {
+      dispatch(deleteTournament(tournament.id));
       bottomSheetModalRef.current?.close();
     };
 
@@ -35,9 +53,9 @@ export const TournamentDetailModal = ({
           onPress: performDelete,
           style: 'destructive',
         },
-      ]
+      ],
     );
-  }, []);
+  }, [dispatch, tournament.id]);
 
   const HeroImage = useCallback(
     () => (
@@ -51,7 +69,7 @@ export const TournamentDetailModal = ({
         </Image>
       </>
     ),
-    []
+    [],
   );
   const Organizer = useCallback(
     () => (
@@ -66,7 +84,7 @@ export const TournamentDetailModal = ({
         <TextBody>{tournament?.organizer}</TextBody>
       </Row>
     ),
-    [tournament?.organizer]
+    [tournament?.organizer],
   );
   const Participants = useCallback(
     () => (
@@ -81,7 +99,7 @@ export const TournamentDetailModal = ({
         <TextBody>{`${tournament?.participants.current}/${tournament?.participants.max}`}</TextBody>
       </Row>
     ),
-    [tournament?.participants]
+    [tournament?.participants],
   );
   const EventDate = useCallback(
     () => (
@@ -102,21 +120,22 @@ export const TournamentDetailModal = ({
         </TextBody>
       </Row>
     ),
-    [tournament?.startDate]
+    [tournament?.startDate],
   );
 
   return (
     <>
       <HeroImage />
       <Container>
-        <H4>{tournament?.game}</H4>
+        <TextBody>{tournament?.game}</TextBody>
+        <H4>{tournament?.name}</H4>
 
-        <Row>
-          <Container>
+        <RowSpaceBetween>
+          <View>
             <Organizer />
             <Participants />
             <EventDate />
-          </Container>
+          </View>
 
           <Buttons>
             <RoundButton onPress={handleEdit}>
@@ -135,7 +154,7 @@ export const TournamentDetailModal = ({
               />
             </RoundButton>
           </Buttons>
-        </Row>
+        </RowSpaceBetween>
       </Container>
     </>
   );
@@ -148,6 +167,7 @@ const IconContainer = styled.View`
 const Container = styled.View`
   padding-horizontal: ${theme.spacing(Spacing.l)};
 `;
+
 const Image = styled.View`
   width: 100%;
   height: 200px;
@@ -163,10 +183,16 @@ const RoundButton = styled.Pressable`
   height: 40px;
   background-color: ${theme.palette.background.alt2};
   border: 0px;
-  left: 10px;
+  margin-left: ${theme.spacing(Spacing.m)};
   justify-content: center;
   align-items: center;
 `;
+
+const RowSpaceBetween = styled(Row)`
+  justify-content: space-between;
+`;
 const Buttons = styled(Row)`
-  left: 60px;
+  margin-right: ${theme.spacing(Spacing.s)};
+  justify-content: flex-end;
+  flex: 1;
 `;
