@@ -2,11 +2,18 @@
 
 - I chose to use `@reduxjs/toolkit`` as its pretty much the new standard
 - It's the first time I use `styled-components`, I guess my objects can probably be organized in a better way
-- I used some libraries. This might be a bit overkill for such an small app, but I usually choose setup apps thinking on the long run
+- I used some libraries. This might be a bit overkill for such an small app, but I usually choose to setup apps thinking on the long run
   - `@gorhom/bottom-sheet` for the modal,
   - `react-native-vector-icons` for the icons
   - `react-intl` to process the date
   - `zod` for data validation of the form (I usually combine it with `react-hook-form`)
+
+## What I've built
+* I chose a main UI based in columns because I thought it would help me with the tablet version
+
+![responsive.png](doc/responsive.png)
+![responsive-modal.png](doc/responsive-modal.png)
+![doc/list.mov](./doc/list.mov)
 
 ---
 

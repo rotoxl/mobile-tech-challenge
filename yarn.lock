@@ -2064,6 +2064,11 @@
   resolved "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.8.tgz"
   integrity sha512-kMpQpfZKSCBqltAJwskgePRaYRFukDkm1oItcAbC3gNELR20XIBcN9VRgg4+m8DKsTfkWeA4m4Imp4DDuWy7FQ==
 
+"@types/react-native-orientation@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.npmjs.org/@types/react-native-orientation/-/react-native-orientation-5.0.4.tgz"
+  integrity sha512-FLfa6iyDydGPjMhGhgEMAYgrntSzci5J1V+VY79Ydpknt6vF55I43T3ZZd5U+tw3Z6hPc+y5fjVeeEQ+FhJaTg==
+
 "@types/react-native-vector-icons@^6.4.17":
   version "6.4.17"
   resolved "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.17.tgz"

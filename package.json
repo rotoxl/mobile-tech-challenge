@@ -9,7 +9,7 @@
     "start": "react-native start",
     "test": "jest",
     "start:api": "json-server -p 4000 -m api/post.js -d -w ./api/db.js",
-    "start:api:delay": "json-server -p 4000 -m api/post.js -d 2000 -w ./api/db.js",
+    "start:api:delay": "json-server -p 4000 -m api/post.js -d 500 -w ./api/db.js",
     "start:api:timeout": "json-server -p 4000 -m api/timeout.js -d -w ./api/db.js"
   },
   "dependencies": {
@@ -50,6 +50,7 @@
     "@types/jest": "^29.5.8",
     "@types/metro-config": "^0.76.3",
     "@types/react": "^18.0.24",
+    "@types/react-native-orientation": "^5.0.4",
     "@types/react-native-vector-icons": "^6.4.17",
     "@types/react-redux": "^7.1.24",
     "@types/react-test-renderer": "^18.0.0",

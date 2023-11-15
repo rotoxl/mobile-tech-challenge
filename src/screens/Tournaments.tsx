@@ -31,7 +31,7 @@ const Tournaments = () => {
   }, [dispatch, query]);
 
   const loadNextPage = useCallback(() => {
-    // dispatch(fetchTournaments({ pageNumber: tournamentPage + 1, query }));
+    dispatch(fetchTournaments({ pageNumber: tournamentPage + 1, query }));
   }, [dispatch, query, tournamentPage]);
 
   const handleFilter = useCallback(
