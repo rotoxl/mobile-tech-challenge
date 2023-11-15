@@ -21,7 +21,9 @@ const Tournaments = () => {
   const [query, setQuery] = useState<string>('');
   const dispatch = useAppDispatch();
 
-  const tournamentStatus = useAppSelector((state) => state.tournaments.status);
+  const tournamentStatus = useAppSelector((state) => {
+    return state.tournaments.status;
+  });
   const tournamentPage = useAppSelector((state) => state.tournaments.page);
 
   const refetchData = useCallback(() => {
@@ -29,7 +31,7 @@ const Tournaments = () => {
   }, [dispatch, query]);
 
   const loadNextPage = useCallback(() => {
-    dispatch(fetchTournaments({ pageNumber: tournamentPage + 1, query }));
+    // dispatch(fetchTournaments({ pageNumber: tournamentPage + 1, query }));
   }, [dispatch, query, tournamentPage]);
 
   const handleFilter = useCallback(

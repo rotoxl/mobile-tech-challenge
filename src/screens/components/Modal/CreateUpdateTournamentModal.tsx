@@ -13,6 +13,7 @@ import {
 import { useAppDispatch } from '../../../store/hooks';
 import theme, { Spacing } from '../../../theme';
 import { ActivityIndicator } from 'react-native';
+import { useSnackbar } from '../../../integrations/snackbar/useSnackbar';
 
 export const latinSpacesAndNumbers = /^[a-zA-Z0-9 ]+$/;
 const FormValidator = z.object({
@@ -23,7 +24,7 @@ const FormValidator = z.object({
     .max(50)
     .regex(
       latinSpacesAndNumbers,
-      'Only latin characters, spaces and numbers are allowed'
+      'Only latin characters, spaces and numbers are allowed',
     ),
 });
 
@@ -40,6 +41,7 @@ type Props =
     };
 
 export const CreateUpdateTournamentModal = ({ name, id, operation }: Props) => {
+  const { showSnackbarWithUndo } = useSnackbar();
   const [inputValue, setInputValue] = React.useState<string>(name ?? '');
   const [errorDescription, setErrorDescription] = React.useState<
     string | undefined
@@ -71,6 +73,10 @@ export const CreateUpdateTournamentModal = ({ name, id, operation }: Props) => {
         }
         setLoading(false);
         bottomSheetModalRef.current?.close();
+
+        showSnackbarWithUndo(
+          operation === 'update' ? 'Tournament updated' : 'Tournament created',
+        );
       } catch (e: any) {
         console.log(e);
         setErrorDescription(`${e.message}; please try again later`);
@@ -105,7 +111,9 @@ export const CreateUpdateTournamentModal = ({ name, id, operation }: Props) => {
       {loading ? (
         <ActivityIndicator size="small" color={theme.palette.secondary.light} />
       ) : (
-        <Button onPress={handleSaveData}>Create</Button>
+        <Button onPress={handleSaveData}>
+          {isCreate ? 'Create' : 'Update'}
+        </Button>
       )}
     </ModalContainer>
   );

@@ -16,6 +16,7 @@ import { Alert, View } from 'react-native';
 import { bottomSheetModalRef } from '../../../components/Modal';
 import { useAppDispatch } from '../../../store/hooks';
 import { CreateUpdateTournamentModal } from './CreateUpdateTournamentModal';
+import { useSnackbar } from '../../../integrations/snackbar/useSnackbar';
 
 type TournamentDetailProps = {
   tournament: Tournament;
@@ -25,6 +26,7 @@ export const TournamentDetailModal = ({
   tournament,
 }: TournamentDetailProps) => {
   const dispatch = useAppDispatch();
+  const { showSnackbarWithUndo } = useSnackbar();
 
   const handleEdit = useCallback(() => {
     // bottomSheetModalRef.current?.close();
@@ -40,7 +42,9 @@ export const TournamentDetailModal = ({
   const handleDelete = useCallback(() => {
     const performDelete = () => {
       dispatch(deleteTournament(tournament.id));
+
       bottomSheetModalRef.current?.close();
+      showSnackbarWithUndo('Tournament deleted')
     };
 
     Alert.alert(

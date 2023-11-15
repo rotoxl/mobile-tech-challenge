@@ -16,11 +16,15 @@ export type Tournament = {
   startDate: string;
 };
 
-type TournamentState = {
+type TournamentStateMoment = {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   list: Tournament[];
   page: number;
   hasMoreResults: boolean;
+};
+
+type TournamentState = TournamentStateMoment & {
+  past: TournamentState | undefined;
 };
 
 const initialState: TournamentState = {
@@ -28,18 +32,31 @@ const initialState: TournamentState = {
   list: [],
   page: 1,
   hasMoreResults: false,
+  past: undefined,
 };
 
 const tournamentSlice = createSlice({
   name: 'tournaments',
   initialState,
-  reducers: {},
+  reducers: {
+    undo(state) {
+      if (state.past) {
+        console.log('undo.0', state.list.length, state.past.list.length);
+
+        state = {
+          ...state.past,
+          past: undefined,
+        };
+
+        console.log('undo.1', state.list.length);
+        return state;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchTournaments.pending, (state) => {
         state.status = 'loading';
-
-        console.log('fetchTournaments.pending');
       })
       .addCase(fetchTournaments.fulfilled, (state, action) => {
         const pageNumber = action.meta.arg.pageNumber;
@@ -52,8 +69,6 @@ const tournamentSlice = createSlice({
         state.status = 'succeeded';
         state.page = pageNumber;
         state.hasMoreResults = action.payload.length > 0;
-
-        console.log('fetchTournaments.fulfilled');
       })
       .addCase(fetchTournaments.rejected, (state) => {
         state.status = 'failed';
@@ -71,14 +86,41 @@ const tournamentSlice = createSlice({
           },
         } satisfies Tournament;
 
+        state.past = {
+          ...state,
+          list: [...state.list],
+        };
+
         state.list.splice(0, 0, newTournament);
       })
       .addCase(createTournament.rejected, (state) => {
+        state.past = {
+          ...state,
+        };
         state.list.splice(0, 1);
       })
       .addCase(deleteTournament.pending, (state, action) => {
+        state.past = {
+          ...state,
+        };
         const id = action.meta.arg;
         state.list = state.list.filter((item) => item.id !== id);
+      })
+      .addCase(updateTournament.pending, (state, action) => {
+        state.past = {
+          ...state,
+          list: [...state.list],
+        };
+
+        const index = state.list.findIndex(
+          (item) => item.id === action.meta.arg.id,
+        );
+        const tournament = state.list[index];
+        const updatedTournament = {
+          ...tournament,
+          name: action.meta.arg.name,
+        };
+        state.list.splice(index, 1, updatedTournament);
       });
   },
 });
@@ -128,3 +170,5 @@ export const updateTournament = createAsyncThunk(
 export default tournamentSlice.reducer;
 
 export const selectAllPosts = (state: RootState) => state.tournaments.list;
+
+export const { undo } = tournamentSlice.actions;

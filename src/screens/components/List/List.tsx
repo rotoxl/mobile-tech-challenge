@@ -139,7 +139,7 @@ export const List = ({
       setRefreshing(false);
       setLoadingMore(false);
     }
-  }, [pageNumber, tournamentStatus]);
+  }, [pageNumber, tournamentStatus, tournaments]);
 
   if (isRefreshing || isLoadingMore || tournamentStatus === 'succeeded') {
     if (tournaments.length > 0) {
